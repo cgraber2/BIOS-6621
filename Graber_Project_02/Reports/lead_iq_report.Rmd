@@ -1,0 +1,43 @@
+---
+title: "lead_iq_report"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+
+## Beginning of Report ############################################################################## 
+
+The following chunk of R code calculates the overall mean IQ, the mean IQ of subjects near the smelter, and the mean IQ of subjects far from the smelter. The mean IQ of subjects near the smelter and far from the smelter are displayed in a table created using knitr::kable(), as well as in a barplot.The distribution of IQ in subjects near and far from the smelter is displayed in a boxplot.
+
+
+```{r}
+setwd("/Users/cgraber/Graber_Project_02/DataRaw")
+lead_iq <- read.csv("lead-iq-01.csv")
+
+overall_mean <- mean(lead_iq$IQ)
+Far_mean <- mean(lead_iq$IQ[lead_iq$Smelter == "Far"])
+Near_mean <- mean(lead_iq$IQ[lead_iq$Smelter == "Near"])
+means <- c(Far_mean, Near_mean)
+print(overall_mean)
+print(means)
+means_df <- data.frame(means, row.names = c("Far","Near"))
+
+knitr::kable(means_df, col.names = "IQ")
+
+boxplot(IQ~Smelter,data=lead_iq, main="IQ vs Smelter Distance",
+   xlab="Smelter", ylab="IQ") 
+
+barplot(height=means, names=c("Far","Near"), xlab="Smelter", ylab="IQ", main="IQ vs Smelter Distance", ylim=range(pretty(c(0, 110))))
+
+```
+
+
